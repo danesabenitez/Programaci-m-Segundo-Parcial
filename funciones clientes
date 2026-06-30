@@ -1,0 +1,71 @@
+=== ORDENAR CLIENTES (Bubble Sort) ===
+Para qué sirve: deja el arreglo ordenado por DNI de menor a mayor. Por qué se necesita: la búsqueda binaria SOLO funciona si el arreglo está ordenado. Sin esta función antes, buscarCliente() daría resultados incorrectos.
+Cómo funciona: recorre el arreglo en pares (j y j+1) repetidas veces. Si el elemento de la izquierda es mayor que el de la derecha, los intercambia. Repite esto hasta que no quedan elementos fuera de orden.
+Se llama "burbuja" porque los valores más grandes van "subiendo" hacia el final del arreglo en cada vuelta, como burbujas.
+
+=== LISTAR CLIENTES HABILITADOS ===
+Para qué sirve: muestra únicamente los clientes activos (habilitado == 1),
+ocultando los deshabilitados.
+Cómo funciona: recorre todo el arreglo con un for, y dentro usa un if para filtrar. No hace falta ordenar nada antes, porque no busca un valor puntual, solo filtra y muestra.
+Detalle importante: se usa un contador (encontrados) para detectar si ningún cliente cumplió la condición, y avisar "No hay clientes habilitados" en ese caso. Sin este contador, si no hay habilitados, el programa no
+mostraría ningún mensaje y parecería que no hizo nada.
+
+=== BUSCAR CLIENTE POR BÚSQUEDA BINARIA ===
+Para qué sirve: encontrar un cliente por DNI de forma mucho más rápida que recorriendo uno por uno (búsqueda secuencial).
+Requisito obligatorio: el arreglo tiene que estar ordenado. Por eso la función llama primero a ordenarClientes() antes de buscar.
+Cómo funciona: en vez de recorrer todo el arreglo, parte siempre del elemento del medio. Si el DNI buscado es mayor, descarta toda la mitad
+izquierda (porque ahí no puede estar). Si es menor, descarta la mitad derecha. Repite esto, reduciendo el rango de búsqueda a la mitad en cada vuelta, hasta encontrarlo o quedarse sin rango.
+Por qué es más rápida: con 1000 elementos, búsqueda secuencial puede tardar hasta 1000 comparaciones; búsqueda binaria tarda como máximo 10 (log2 de 1000), porque cada paso descarta la mitad de los datos.
+
+=== LISTAR CLIENTES POR DNI ===
+Para qué sirve: mostrar todos los clientes ordenados de menor a mayor DNI.
+Cómo funciona: simplemente llama a ordenarClientes() primero (reutiliza la función que ya existe, no hace falta reescribir el ordenamiento) y después recorre con un for imprimiendo todo.
+Idea clave: no hay que reinventar la rueda. Si ya existe una función que ordena, las funciones de "listar ordenado" solo la llaman y después imprimen.
+
+=== HABILITAR CLIENTE / DESHABILITAR CLIENTE ===
+Para qué sirven: cambiar el estado de un cliente sin borrarlo del arreglo (a diferencia de "eliminar", que sí lo saca).
+Cómo funcionan: ambas usan el mismo patrón de búsqueda secuencial (recorrer con for comparando dni) y, al encontrarlo, modifican el campo habilitado (1 para habilitar, 0 para deshabilitar) y cortan la función
+con un return.
+Por qué no necesitan ordenar antes: como solo recorren buscando una coincidencia exacta sin aprovechar el orden, usan búsqueda secuencial simple, no binaria. No hace falta ordenar.
+
+=== MODIFICAR CLIENTE ===
+Para qué sirve: permitir editar nombre, apellido y saldo de un cliente existente, identificado por su DNI.
+Cómo funciona: mismo patrón de búsqueda secuencial que habilitar/deshabilitar. Una vez que encuentra al cliente, en vez de cambiar un solo campo fijo, le pide al usuario los tres nuevos datos con printf + scanf y los guarda directamente en esa posición del arreglo.
+Detalle técnico importante: en char nombre[30] no se usa & en el scanf, porque el nombre del arreglo ya funciona como una dirección de memoria. En cambio en saldo (que es float, una variable simple) sí hace falta el &.
+
+=== LISTAR CLIENTES POR SALDO ===
+Para qué sirve: mostrar los clientes ordenados de mayor a menor saldo (no por DNI).
+Cómo funciona: usa la misma lógica de Bubble Sort que ordenarClientes(), pero compara y ordena por el campo saldo en vez de dni, y además invierte la condición del if para que quede de mayor a menor en vez de menor a mayor.
+Idea clave: el Bubble Sort es siempre la misma estructura (dos for anidados + variable aux para intercambiar). Lo único que cambia entre una función de ordenamiento y otra es: qué campo se compara, y si el orden es ascendente o descendente.
+
+=== AGREGAR CLIENTE ===
+Para qué sirve: sumar un cliente nuevo al arreglo.
+Cómo funciona: recibe el arreglo, un puntero a la cantidad actual(*cantidad) y el nuevo cliente ya armado. Primero chequea que no se haya llegado al límite máximo del arreglo (100 en este caso). Si hay
+lugar, guarda el nuevo cliente en la posición [*cantidad] y después incrementa esa cantidad en uno.
+Por qué usa un puntero (int *cantidad) y no un int normal: la cantidad de clientes vive en main(), no dentro de la función. Si se pasara como int normal, la función trabajaría con una copia y el cambio no se
+vería reflejado afuera al volver a main(). Usando un puntero, la función modifica directamente la variable original de main().
+Detalle: el (*cantidad)++ necesita los paréntesis, porque el operador ++ tiene más prioridad que el *, así que sin paréntesis se rompería el código (intentaría incrementar el puntero, no el valor apuntado).
+
+=== ELIMINAR CLIENTE ===
+Para qué sirve: sacar definitivamente un cliente del arreglo (a diferencia de deshabilitar, que solo cambia un estado).
+Cómo funciona: primero busca la posición del cliente por DNI con un for. Si lo encuentra, recorre desde esa posición hasta el final corriendo cada elemento un lugar hacia la izquierda (clientes[j] = clientes[j+1]), tapando así el espacio del cliente eliminado. 
+Al final, resta uno a la cantidad total.
+Por qué hay que "correr" los elementos: un arreglo no tiene huecos, no se puede simplemente "borrar" una posición. Para que no quede un espacio vacío en el medio, todos los elementos siguientes se desplazan
+un lugar para adelante, y el último queda duplicado, pero como la cantidad bajó en uno, ese dato sobrante ya no se vuelve a leer. También usa puntero (int *cantidad) por la misma razón que
+agregarCliente: necesita modificar la cantidad real de main().
+
+=== MOSTRAR ESTADÍSTICAS ===
+Para qué sirve: informar cuántos clientes hay en total, cuántos habilitados y cuántos inhabilitados.
+Cómo funciona: recorre todo el arreglo una sola vez con un for, y en cada vuelta usa un if para sumar a uno de dos contadores (habilitados o inhabilitados) según el valor del campo habilitado.
+Idea clave: es un patrón típico de "recorrer y contar". No modifica ni busca nada, solo acumula información mientras recorre.
+
+=== CALCULAR SALDO PROMEDIO ===
+Para qué sirve: calcular el promedio de saldo de todos los clientes cargados.
+Cómo funciona: primero chequea que haya al menos un cliente cargado (si cantidad es 0, avisa y corta, porque dividir por cero rompería el programa). Si hay clientes, suma el saldo de todos en una variable
+acumuladora (float suma), y al final divide esa suma por la cantidad de clientes.
+Detalle importante: el chequeo de cantidad == 0 antes de dividir es fundamental. Sin ese control, el programa intentaría hacer una división por cero, lo cual da un resultado indefinido o un error.
+
+=== MOSTRAR MENÚ ===
+Para qué sirve: imprimir las opciones disponibles del programa, para que el usuario elija qué hacer.
+Cómo funciona: simplemente una serie de printf con el número de opción y su descripción. No recibe parámetros ni devuelve nada (void), porque solo imprime texto fijo, no necesita ningún dato externo para hacerlo.
+Idea clave: esta función no tiene lógica compleja, es puramente informativa/visual. Se llama una vez al principio de cada vuelta del do-while en main().
