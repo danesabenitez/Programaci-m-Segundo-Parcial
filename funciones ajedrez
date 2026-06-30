@@ -1,0 +1,64 @@
+=== ORDENAR PIEZAS (Bubble Sort) ===
+Para qué sirve: deja el arreglo ordenado por posición (primero por fila, y si hay empate, por columna). Por qué se necesita: igual que en clientes, buscarPieza() usa búsqueda binaria, que solo funciona sobre datos ordenados.
+Cómo funciona: mismo Bubble Sort de siempre (dos for anidados + variable aux), pero la condición de intercambio tiene dos partes:
+  1) si la fila de la pieza izquierda es mayor que la de la derecha, ya alcanza para intercambiar.
+  2) si las filas son iguales, recién ahí se compara la columna para desempatar.
+Idea clave: cuando se ordena por más de un campo (fila y columna), el segundo campo solo importa si hay empate en el primero.
+
+=== BUSCAR PIEZA (Búsqueda Binaria) ===
+Para qué sirve: encontrar una pieza dada su fila y columna, de forma rápida.
+Requisito: llama primero a ordenarPiezas() porque necesita el arreglo ordenado.
+Cómo funciona: igual que buscarCliente, parte del medio del arreglo y descarta mitades. La comparación también tiene en cuenta primero la fila y, si coincide, la columna, para decidir si avanzar a la derecha
+o la izquierda.
+Diferencia con clientes: en vez de comparar un solo campo (dni), acá se comparan dos campos combinados (fila y columna) para saber en qué dirección moverse.
+
+=== LISTAR PIEZAS POR VALOR ===
+Para qué sirve: mostrar las piezas ordenadas de mayor a menor valor (la reina vale más que un peón, por ejemplo).
+Cómo funciona: Bubble Sort comparando el campo valor, con la condición invertida (de mayor a menor) para que las piezas más valiosas queden primero.
+Idea clave: misma lógica que "listar clientes por saldo", solo cambia el campo que se compara.
+
+=== LISTAR PIEZAS POR POSICIÓN ===
+Para qué sirve: mostrar todas las piezas ordenadas por su ubicación en el tablero (fila y columna).
+Cómo funciona: llama a ordenarPiezas() (reutiliza la función ya hecha) y después recorre con un for imprimiendo todo.
+Idea clave: igual que "listar clientes por DNI", no reinventa el ordenamiento, solo lo usa y muestra el resultado.
+
+=== LISTAR PIEZAS ACTIVAS ===
+Para qué sirve: mostrar solo las piezas que siguen en juego (activa == 1), ocultando las capturadas.
+Cómo funciona: recorre todo el arreglo con un for y filtra con un if, exactamente igual que "listar clientes habilitados". También usa un contador para avisar si no quedó ninguna pieza activa.
+
+=== CAPTURAR PIEZA / RESTAURAR PIEZA ===
+Para qué sirven: cambiar el estado de una pieza (capturada o en juego) sin sacarla del arreglo.
+Cómo funcionan: búsqueda secuencial por fila y columna (recorrer con for comparando ambos valores). Al encontrarla, capturarPieza pone activa = 0, y restaurarPieza pone activa = 1. Mismo patrón que habilitar/deshabilitar cliente.
+Por qué no usan búsqueda binaria: buscan una combinación exacta de dos campos sin aprovechar ningún orden particular para la operación en sí, entonces alcanza con recorrer secuencialmente.
+
+=== MODIFICAR PIEZA ===
+Para qué sirve: cambiar el tipo, color o valor de una pieza ya existente, identificada por su posición (fila y columna).
+Cómo funciona: busca por fila y columna con el mismo patrón de capturar/restaurar. Al encontrarla, le pide al usuario los nuevos datos (tipo de pieza por número de menú, color) y recalcula el valor
+automáticamente usando las funciones auxiliares seleccionarTipoDePieza y obtenerValorDePieza, en vez de pedirle el valor directamente al usuario.
+Detalle importante: el valor de la pieza no se pide por teclado, se calcula a partir del tipo elegido (peón=1, torre=5, etc.), así se evita que el usuario cargue un valor incorrecto a mano.
+
+=== MOSTRAR ESTADÍSTICAS ===
+Para qué sirve: informar cuántas piezas hay en total, cuántas activas y cuántas capturadas.
+Cómo funciona: recorre el arreglo una vez, sumando a uno de dos contadores según el campo activa. Mismo patrón que "mostrar estadísticas" en clientes, solo cambia el nombre del campo que se chequea (activa en vez de habilitado).
+
+=== AGREGAR PIEZA ===
+Para qué sirve: sumar una pieza nueva al arreglo.
+Cómo funciona: igual que agregarCliente: chequea que no se haya llegado al límite (100), guarda la nueva pieza en la posición [*cantidad] y aumenta el contador con (*cantidad)++.
+Por qué usa puntero: mismo motivo que en clientes, la cantidad vive en main() y hay que modificarla de verdad, no una copia.
+
+=== SELECCIONAR TIPO DE PIEZA (función auxiliar) ===
+Para qué sirve: traducir un número de menú (1 a 6) al nombre de texto de la pieza correspondiente ("peon", "torre", "caballo", etc.).
+Cómo funciona: un switch que, según el número recibido, devuelve (return) el texto correspondiente. Si el número no es válido, devuelve "desconocida".
+Por qué devuelve char *: porque el resultado es una cadena de texto, no un número ni una estructura completa.
+Para qué se usa: cuando se agrega o modifica una pieza, en vez de escribir el nombre del tipo a mano (con riesgo de errores de tipeo), el usuario elige un número de menú y esta función devuelve el texto
+correcto para guardar en el campo tipo.
+
+=== OBTENER VALOR DE PIEZA (función auxiliar) ===
+Para qué sirve: traducir el mismo número de menú (1 a 6) al valor numérico de esa pieza (peón=1, torre=5, caballo=3, alfil=3, reina=9, rey=100).
+Cómo funciona: switch igual que la anterior, pero devuelve un int en vez de un texto.
+Para qué se usa: junto con seleccionarTipoDePieza, evita que el valor de la pieza se cargue a mano. El usuario solo elige el tipo de pieza una vez, y el programa calcula automáticamente tanto el nombre como el
+valor correspondiente a partir de ese mismo número.
+
+=== MOSTRAR MENÚ ===
+Para qué sirve: imprimir las opciones del programa para que el usuario elija qué hacer.
+Cómo funciona: una serie de printf con cada opción numerada. No recibe parámetros ni devuelve nada, igual que en el programa de clientes.
