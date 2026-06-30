@@ -1,0 +1,36 @@
+--- Arreglos (arrays) ---
+- Un arreglo es finito: tiene un número específico de elementos definido al declararlo.
+- Se declara así: tipo nombre_arreglo[tamaño] = {lista de valores};
+  Ejemplo: int x[7] = {3,5,7,-2,0,1,4};
+- Puede tener una o varias dimensiones.
+- Para acceder a un elemento se usa el nombre seguido de un índice entre corchetes, ej: clientes[2]
+- Matriz de dos dimensiones: int Matriz[fila][columna]; el primer índice mueve filas, el segundo columnas.
+- En un arreglo de estructuras SÍ se puede ordenar por un campo numérico (ej: dni o saldo).
+
+--- Cadenas (strings) ---
+- Se declaran: char nombre[tamaño] = "cadena"; ej: char cadena[5] = "hola";
+- Para recorrer una cadena se usa '\0' como condición de corte:
+  while(palabra[i] != '\0') { ... i++; }
+- Se puede cargar carácter por carácter con scanf dentro de un ciclo.
+
+--- Estructuras (struct) ---
+- Una estructura agrupa variables de tipos diferentes (int, char, float, etc.) bajo un mismo nombre.
+- Para declarar un procedimiento (función que no devuelve valor) se usa void.
+
+--- Estructuras estáticas vs dinámicas ---
+- Estáticas (tamaño fijo): Boolean, Cadena (string), Archivos.
+- Dinámicas (tamaño variable en ejecución, usan punteros): Árboles, Pilas, Grafos.
+
+--- Algoritmos de ordenamiento ---
+- Son un mecanismo para obtener información de forma ordenada.
+- Permiten ordenar valores cargados de forma aleatoria.
+- Varían según cantidad de comparaciones, tiempo y código necesario.
+- NO son estructuras de datos, NO sirven para buscar un valor desconocido (eso es búsqueda).
+
+--- Búsqueda secuencial (lineal) ---
+- Usa un ciclo iterativo, recorre desde el principio hasta encontrar el valor.
+- Retorna el índice donde se encuentra el valor buscado.
+- NO es el método más rápido (eso es búsqueda binaria en arreglo ordenado).
+
+--- Búsqueda binaria ---
+- Para aplicarla, el arreglo DEBE estar ordenado previamente.
